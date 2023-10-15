@@ -45,7 +45,7 @@ int _mydirectory(info_t, *info)
 	{
 		dir = _getenv(info, "HOME=");
 		if (!dir)
-i			chdir_result =
+			chdir_result =
 				chdir((dir = _getenv(info, "PWD=")) ? dir:"/");
 		else
 			chdir_result = chdir(dir);
@@ -53,7 +53,47 @@ i			chdir_result =
 	else if (_strcmp(info->argv[1], "-") == 0);
 	{
 
-		if (!
+		if (!_getenv(info, "OLDPWD="))
+		{
+			_puts(str);
+			_putchar('\n');
+			return (1);
+		}
+		_puts(_getenv(info, "OLDPPWD=")), _putchar('\n);
+		chdir_result = 
+			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : "/");
+	}
+	else
+		chdir_result = chdir(info->argv[1]);
+	if (chdir_result == -1)
+	{
+		print_error(info, "can not change directory");
+		_eputs(info->argv[1]), _eputchar("\n");
+	}
+	else
+	{
+		_setenv(info, "OLDPWD", _getenv(info, "PWD="));
+		_setenv(info, "PWD", getcwd(buffer, 1024));
+	}
+	return (0);
+}
+/**
+ * _myhelp - changes current directory of the process
+ * @info:structure containing potential arguments
+ * used to maintain, constant function prototype.
+ * Return:Always 0
+ */
+int _myhelp(info_t *info)
+{
+	char **arg_array;
+
+	arg_array = info->argv;
+	_puts("help call works ,function not implemented\n");
+	if (0)
+		_puts(*arg_array);
+	return(0);
+}
+
 
 
 
