@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * _eputs - prints an input string
+ * str_in - prints an input string
  * @str: the string to be printed
  *
  * Return: Nothing
  */
-void _eputs(char *str)
+void str_in(char *str)
 {
 	int i = 0;
 
@@ -14,19 +14,19 @@ void _eputs(char *str)
 		return;
 	while (str[i] != '\0')
 	{
-		_eputchar(str[i]);
+		str_test(str[i]);
 		i++;
 	}
 }
 
 /**
- * _eputchar - writes the character c to stderr
+ * str_test - writes the character c to stderr
  * @c: The character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _eputchar(char c)
+int str_test(char c)
 {
 	static int i;
 	static char buf[WRITE_BUF_SIZE];
@@ -42,14 +42,14 @@ int _eputchar(char c)
 }
 
 /**
- * _putfd - writes the character c to given fd
+ * fd_str - writes the character c to given fd
  * @c: The character to print
  * @fd: The filedescriptor to write to
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _putfd(char c, int fd)
+int fd_str(char c, int fd)
 {
 	static int i;
 	static char buf[WRITE_BUF_SIZE];
@@ -79,7 +79,7 @@ int _putsfd(char *str, int fd)
 		return (0);
 	while (*str)
 	{
-		i += _putfd(*str++, fd);
+		i += fd_str(*str++, fd);
 	}
 	return (i);
 }
