@@ -1,5 +1,4 @@
 #include "shell.h"
-//the task number 0
 /**
  * is_interactive - return true if shell is intercative mode
  * @info:parameter address
