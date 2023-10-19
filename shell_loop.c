@@ -1,13 +1,13 @@
 #include "shell.h"
 
 /**
- * h_sh - main shell loop
+ * hsh - main shell loop
  * @info: the parameter & return info struct
  * @av: the argument vector from main()
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int h_sh(info_t *info, char **av)
+int hsh(info_t *info, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
@@ -21,17 +21,17 @@ int h_sh(info_t *info, char **av)
 		r = get_input(info);
 		if (r != -1)
 		{
-			info_s(info, av);
-			builtin_ret = f_builtin(info);
+			set_info(info, av);
+			builtin_ret = find_builtin(info);
 			if (builtin_ret == -1)
-				cmd_get(info);
+				find_cmd(info);
 		}
 		else if (interactive(info))
 			_putchar('\n');
-		f_info(info, 0);
+		free_info(info, 0);
 	}
-	w_hist(info);
-	f_info(info, 1);
+	write_history(info);
+	free_info(info, 1);
 	if (!interactive(info) && info->status)
 		exit(info->status);
 	if (builtin_ret == -2)
@@ -44,7 +44,7 @@ int h_sh(info_t *info, char **av)
 }
 
 /**
- * f_builtin - finds a builtin command
+ * find_builtin - finds a builtin command
  * @info: the parameter & return info struct
  *
  * Return: -1 if builtin not found,
@@ -52,7 +52,7 @@ int h_sh(info_t *info, char **av)
  * 	1 if builtin found but not successful,
  * 	2 if builtin signals exit()
  */
-int f_builtin(info_t *info)
+int find_builtin(info_t *info)
 {
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
@@ -78,12 +78,12 @@ int f_builtin(info_t *info)
 }
 
 /**
- * cmd_get - finds a command in PATH
+ * find_cmd - finds a command in PATH
  * @info: the parameter & return info struct
  *
  * Return: void
  */
-void cmd_get(info_t *info)
+void find_cmd(info_t *info)
 {
 	char *path = NULL;
 	int i, k;
@@ -104,13 +104,13 @@ void cmd_get(info_t *info)
 	if (path)
 	{
 		info->path = path;
-		cmd_fork(info);
+		fork_cmd(info);
 	}
 	else
 	{
 		if ((interactive(info) || _getenv(info, "PATH=")
 					|| info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
-			cmd_fork(info);
+			fork_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
@@ -120,12 +120,12 @@ void cmd_get(info_t *info)
 }
 
 /**
- * cmd_fork - forks a an exec thread to run cmd
+ * fork_cmd - forks a an exec thread to run cmd
  * @info: the parameter & return info struct
  *
  * Return: void
  */
-void cmd_fork(info_t *info)
+void fork_cmd(info_t *info)
 {
 	pid_t child_pid;
 
@@ -140,7 +140,7 @@ void cmd_fork(info_t *info)
 	{
 		if (execve(info->path, info->argv, get_environ(info)) == -1)
 		{
-			f_info(info, 1);
+			free_info(info, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);

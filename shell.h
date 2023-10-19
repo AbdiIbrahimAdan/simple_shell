@@ -204,10 +204,6 @@ int _unsetenv(info_t *info, char *var);
 int _setenv(info_t *info, char *var, char *value);
 int populate_env_list(info_t *info);
 
-/* toem_getenv.c */
-char **get_environ(info_t *);
-int _unsetenv(info_t *, char *);
-int _setenv(info_t *, char *, char *);
 
 /* hist.c */
 char *hist_file(info_t *info);
