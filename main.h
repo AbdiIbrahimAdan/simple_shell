@@ -9,6 +9,15 @@
 #include <sys/stat.h>
 
 
+int check_empty_line(char *buff);
+char get_env(char *env_var);
+void print_environment(void);
+int execute_path(char **args);
+int main(void);
+void *_allocates(unsigned int bfree, unsigned int size);
+
+
+
 
 
 
